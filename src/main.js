@@ -4,13 +4,22 @@ const config = {
   height: 540,
   parent: "game",
   backgroundColor: "#12162b",
-    physics: {
+  physics: {
     default: "arcade",
     arcade: { debug: false },
   },
   scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
   // The first scene in the list starts automatically.
-  scene: [NavigationLevel, QuestionScene],
+  scene: [
+    NavigationLevel,
+    PermissionsLevel,
+    NdaLevel,
+    ThreatLevel,
+    PasswordLevel,
+    QuestionScene,
+    EndScene,
+  ],
 };
 
-new Phaser.Game(config);
+const game = new Phaser.Game(config);
+game.registry.set("score", 0); // counts questions answered right on the first try

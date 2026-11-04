@@ -14,7 +14,12 @@ class QuestionScene extends Phaser.Scene {
     const { width, height } = this.scale;
 
     // Dim the paused level behind the question
-    this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.75);
+    this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.8);
+
+    this.add.text(16, 12, `Question ${this.levelIndex + 1} of ${LEVELS.length}`, {
+      fontSize: "14px",
+      color: "#9aa7d9",
+    });
 
     this.add
       .text(width / 2, 40, this.level.prompt, {
@@ -25,12 +30,17 @@ class QuestionScene extends Phaser.Scene {
       })
       .setOrigin(0.5, 0);
 
-    this.buttons = this.level.choices.map((text, i) =>
-      this.makeButton(width / 2, 170 + i * 66, text, () => this.choose(i))
+    // Shuffle so the right answer isn't always in the same spot
+    this.options = Phaser.Utils.Array.Shuffle(
+      this.level.choices.map((text, i) => ({ text, correct: i === this.level.answer }))
+    );
+
+    this.buttons = this.options.map((opt, i) =>
+      this.makeButton(width / 2, 170 + i * 66, opt.text, () => this.choose(i))
     );
 
     this.feedback = this.add
-      .text(width / 2, 435, "", {
+      .text(width / 2, 430, "", {
         fontSize: "18px",
         color: "#ffffff",
         align: "center",
@@ -53,31 +63,40 @@ class QuestionScene extends Phaser.Scene {
   }
 
   choose(i) {
-    if (i === this.level.answer) {
+    const opt = this.options[i];
+
+    if (opt.correct) {
       this.feedback.setColor("#6bff9b").setText("Correct! " + this.level.why);
+      if (this.attempts === 0) {
+        this.registry.set("score", (this.registry.get("score") || 0) + 1);
+      }
       this.showContinue();
     } else if (this.attempts++ === 0) {
+      // First miss: grey out that choice and give a hint
+      this.buttons[i].bg.disableInteractive().setFillStyle(0x4a2a2a);
+      this.buttons[i].txt.setAlpha(0.5);
       this.feedback.setColor("#ff6b6b").setText("Not quite. Hint: " + this.level.hint);
     } else {
-      this.feedback
-        .setColor("#ff6b6b")
-        .setText("The answer: " + this.level.choices[this.level.answer] + "\n" + this.level.why);
+      // Second miss: reveal the answer and move on
+      const right = this.options.find((o) => o.correct).text;
+      this.feedback.setColor("#ff6b6b").setText("The answer: " + right + "\n" + this.level.why);
       this.showContinue();
     }
   }
 
   showContinue() {
     this.buttons.forEach((b) => b.bg.disableInteractive());
-    const next = LEVELS[this.levelIndex + 1];
-    this.makeButton(this.scale.width / 2, 505, next ? "Next level" : "Play again", () =>
-      this.goNext(next)
-    );
+    const last = this.levelIndex + 1 >= LEVELS.length;
+    this.makeButton(this.scale.width / 2, 506, last ? "Finish" : "Next level", () => this.goNext());
   }
 
-  goNext(next) {
-    const target = next || LEVELS[0];
-    const index = next ? this.levelIndex + 1 : 0;
-    this.scene.stop(this.callerKey);               // shut down the paused level
-    this.scene.start(target.scene, { levelIndex: index }); // this also ends the question scene
+  goNext() {
+    const nextIndex = this.levelIndex + 1;
+    this.scene.stop(this.callerKey); // shut down the paused level
+    if (nextIndex < LEVELS.length) {
+      this.scene.start(LEVELS[nextIndex].scene, { levelIndex: nextIndex });
+    } else {
+      this.scene.start("EndScene");
+    }
   }
 }

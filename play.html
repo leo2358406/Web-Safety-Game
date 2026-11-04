@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web Safety Game - Play</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="game"></div>
+  <a id="home" href="index.html">&larr; Home</a>
+
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+  <!-- Order matters: data first, BaseLevel before the levels, main.js last -->
+  <script src="src/questions.js"></script>
+  <script src="src/scenes/BaseLevel.js"></script>
+  <script src="src/scenes/NavigationLevel.js"></script>
+  <script src="src/scenes/PermissionsLevel.js"></script>
+  <script src="src/scenes/NdaLevel.js"></script>
+  <script src="src/scenes/ThreatLevel.js"></script>
+  <script src="src/scenes/PasswordLevel.js"></script>
+  <script src="src/scenes/QuestionScene.js"></script>
+  <script src="src/scenes/EndScene.js"></script>
+  <script src="src/main.js"></script>
+</body>
+</html>

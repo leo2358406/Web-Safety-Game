@@ -6,14 +6,27 @@
   <title>Web Safety Game</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <div id="game"></div>
+<body class="home">
+  <main class="hero">
+    <p class="tag">An interactive experience</p>
+    <h1>Web Safety Game</h1>
+    <p class="lead">
+      Explore, watch what happens, and find out how your data gets tracked,
+      shared and stolen. Learn about internet safety by experiencing it, then
+      prove what you noticed.
+    </p>
 
-  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
-  <!-- Order matters: data and scenes first, main.js last -->
-  <script src="src/questions.js"></script>
-  <script src="src/scenes/NavigationLevel.js"></script>
-  <script src="src/scenes/QuestionScene.js"></script>
-  <script src="src/main.js"></script>
+    <a class="play" href="play.html">Play</a>
+
+    <ul class="features">
+      <li><strong>5 short levels</strong><span>Each one teaches a different privacy lesson.</span></li>
+      <li><strong>Learn by doing</strong><span>Answer questions using what you saw, not what you memorized.</span></li>
+      <li><strong>Play instantly</strong><span>Runs in your browser. No download needed.</span></li>
+    </ul>
+
+    <p class="controls">
+      Move: <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or arrow keys &nbsp;&middot;&nbsp; Interact: <kbd>E</kbd>
+    </p>
+  </main>
 </body>
 </html>
